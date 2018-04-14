@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "glob-all": "^3.1.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-hot-loader": "^4.0.1"
@@ -10,16 +11,28 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
-    "build": "cross-env NODE_ENV=production webpack -p --optimize-minimize "
+    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js -p --optimize-minimize "
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "devDependencies": {
+    "autoprefixer": "^8.2.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "cross-env": "^5.1.4",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.8.3",
+    "postcss-flexbugs-fixes": "^3.3.0",
+    "postcss-loader": "^2.1.3",
+    "purify-css": "^1.2.5",
+    "purifycss-webpack": "^0.7.0",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.20.3",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14",
