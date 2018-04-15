@@ -1,15 +1,6 @@
-import { cube } from "./math";
-import './style.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.scss';
+import App from './App';
 
-function component() {
-  const element = document.createElement('pre');
-
-  element.innerHTML = [
-    'Hello webpack!',
-    '5 cubed is equal to ' + cube(5)
-  ].join('\n\n');
-
-  return element;
-}
-
-document.body.appendChild(component());
+ReactDOM.render(<App />, document.getElementById('root'));

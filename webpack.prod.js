@@ -6,7 +6,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const PurifyCSSPlugin = require('purifycss-webpack');
 const glob = require('glob-all');
-const common = require('./webpack.config');
+const common = require('./webpack.common');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 module.exports = merge(common, {
   output: {
@@ -14,6 +15,10 @@ module.exports = merge(common, {
     publicPath: '/'
   },
   plugins: [
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname),
+      manifest: require('./build/vendor-manifest.json'),
+    }),
     new UglifyJsPlugin({
       uglifyOptions: {
         test: /\.js($|\?)/i,
@@ -47,7 +52,43 @@ module.exports = merge(common, {
         whitelist: ['*purify*']
       }
     }),
+    // After webpack 4+, it is required to apply AddAssetHtmlPlugin after HtmlWebpackPlugin to
+    // register html-webpack-plugin-before-html-generation hook which is used inside first,
+    // while previous versions of webpack do not care about it.
+    new AddAssetHtmlPlugin([
+      {
+        includeSourcemap: false,
+        hash: true,
+        filepath: require.resolve('./build/vendor.dll.js')
+      }
+    ])
   ],
+  optimization: {
+    minimize: true,
+    // splitChunks: {
+    //   // chunks: "all",
+    //   maxAsyncRequests: 5,
+    //   maxInitialRequests: 3,
+    //   minChunks: 1,
+    //   cacheGroups: {
+    //     default: false,
+    //     // Create a commons chunk, which includes all code shared between entrypoints.
+    //     commons: {
+    //       name: 'commons',
+    //       chunks: "initial",
+    //       minChunks: 2
+    //     },
+    //     // vendors: {
+    //     //   test: /[\\/]node_modules[\\/]/,
+    //     //   name: "vendors",
+    //     //   chunks: "all"
+    //     // }
+    //   }
+    // },
+    runtimeChunk: {
+      name: 'manifest',
+    }
+  },
   module: {
     rules: [
       {
